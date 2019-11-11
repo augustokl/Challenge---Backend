@@ -1,12 +1,15 @@
 import jwt from 'jsonwebtoken';
 
 import User from '../models/User';
+import authConfig from '../../config/auth';
 
 class SessionController {
   async store(req, res) {
     const { email, password } = req.body;
 
-    const user = User.findOne({ where: { email } });
+    const user = await User.findOne({ where: { email } });
+
+    const { id, name } = user;
 
     if (!user) {
       return res.status(401).json({ error: 'User not exists' });
@@ -16,7 +19,7 @@ class SessionController {
       return res.status(401).json({ error: 'Password incorret' });
     }
 
-    const { id, name } = user;
+    // const { id, name } = user;
 
     return res.json({
       user: {
@@ -24,8 +27,8 @@ class SessionController {
         name,
         email,
       },
-      token: jwt.sign({ id }, 'd83bc5f165445c21ccd7d74990d4ab76', {
-        expiresIn: '7d',
+      token: jwt.sign({ id }, authConfig.secret, {
+        expiresIn: authConfig.expiresIn,
       }),
     });
   }
