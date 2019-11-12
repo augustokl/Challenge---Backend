@@ -13,7 +13,7 @@ class UserController {
     return res.json({ id, name, email });
   }
 
-  async list(req, res) {
+  async index(req, res) {
     const users = await User.findAll();
 
     return res.json(users);
