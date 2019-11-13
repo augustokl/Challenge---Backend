@@ -9,7 +9,29 @@ module.exports = {
       },
       student_id: {
         type: Sequelize.INTEGER,
+        allowNull: false,
         references: { model: 'students', key: 'id' },
+      },
+      plan_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: { model: 'plans', key: 'id' },
+      },
+      start_date: {
+        type: Sequelize.DATE,
+        allowNull: false,
+      },
+      end_date: {
+        type: Sequelize.DATE,
+        allowNull: false,
+      },
+      created_at: {
+        type: Sequelize.DATE,
+        allowNull: false,
+      },
+      updated_at: {
+        type: Sequelize.DATE,
+        allowNull: false,
       },
     });
   },
