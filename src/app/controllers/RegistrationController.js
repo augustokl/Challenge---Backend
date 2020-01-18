@@ -1,7 +1,12 @@
-import { addMonths, parseISO } from 'date-fns';
 import * as Yup from 'yup';
+import { addMonths, parseISO } from 'date-fns';
+
 import Registration from '../models/Registration';
 import Plan from '../models/Plan';
+import Student from '../models/Student';
+
+import Queue from '../../lib/Queue';
+import WelcomeMail from '../jobs/WelcomeMail';
 
 class RegistrationController {
   async store(req, res) {
@@ -14,6 +19,12 @@ class RegistrationController {
       return res.status(400).json({ error: 'Validation fails' });
     }
 
+    const student = await Student.findByPk(req.query.student_id);
+
+    if (!student) {
+      return res.status(401).json({ error: 'Student does not exits' });
+    }
+
     const { plan_id, start_date } = req.body;
     const startDate = parseISO(start_date);
 
@@ -21,7 +32,6 @@ class RegistrationController {
 
     const valuePlan = price * duration;
     const end_date = addMonths(startDate, duration);
-    console.log(req.query.student_id);
 
     const registration = await Registration.create({
       student_id: req.query.student_id,
@@ -30,6 +40,8 @@ class RegistrationController {
       end_date,
       price: valuePlan,
     });
+
+    Queue.add(WelcomeMail.key, { student, registration });
 
     return res.json(registration);
   }
