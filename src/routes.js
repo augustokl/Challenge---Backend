@@ -8,14 +8,11 @@ import RegistrationController from './app/controllers/RegistrationController';
 import CheckinController from './app/controllers/CheckinController';
 
 import authMiddleware from './app/middlewares/auth';
-import HelpOrders from './app/models/HelpOrders';
 import HelpOrdersController from './app/controllers/HelpOrdersController';
 
 const routes = new Router();
 
 routes.use((req, res, next) => {
-  console.log(`${req.method} - ${req.url}`);
-
   next();
 });
 
