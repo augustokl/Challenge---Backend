@@ -9,6 +9,30 @@ import Queue from '../../lib/Queue';
 import WelcomeMail from '../jobs/WelcomeMail';
 
 class RegistrationController {
+  async index(req, res) {
+    const { page = 1 } = req.query;
+    const registration = await Registration.findAll({
+      order: ['plan_id'],
+      attributes: ['start_date', 'end_date', 'price'],
+      limit: 20,
+      offset: (page - 1) * 20,
+      include: [
+        {
+          model: Student,
+          as: 'student',
+          attributes: ['nome'],
+        },
+        {
+          model: Plan,
+          as: 'plan',
+          attributes: ['title'],
+        },
+      ],
+    });
+
+    res.json(registration);
+  }
+
   async store(req, res) {
     const schema = Yup.object().shape({
       plan_id: Yup.number().required(),

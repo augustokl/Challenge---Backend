@@ -25,7 +25,7 @@ class WelcomeMail {
         ),
         endDate: format(
           parseISO(registration.end_date),
-          "dd 'de' MMMM 'de' yyyy 'às' HH:mm",
+          "dddd 'de' MMMM 'de' yyyy 'às' HH:mm",
           {
             locale: pt,
           }
